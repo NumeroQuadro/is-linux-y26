@@ -18,7 +18,7 @@ sudo cp readme.txt /etc/skel/ # sudo rm -rf /etc/skel/readme.txt
 sudo useradd -m u1 # sudo userdel u1; sudo rm -rf /home/u1 
 echo "u1:123" | sudo chpasswd # sudo userdel u1
 sudo groupadd g1
-sudo groupmod -U u1 -a g1
+sudo usermod -aG g1 u1
 
 # 8) -------------------------------------------------------------------
 user_id=$(id -u u1)
@@ -41,8 +41,8 @@ sudo useradd -m u2 # userdel u2; sudo rm -rf u2
 echo "u2:321" | sudo chpasswd
 
 # 13) ----------------------------------------------------------------
-sudo cp work3.log /home/work3-1.log
-sudo cp work3.log /home/work3-2.log
+sudo cp work3.log /home/work3-1.log # sudo rm -rf /home/work3-1.log
+sudo cp work3.log /home/work3-2.log # sudo rm -rf /home/work3-2.log
 
 # 14) -------------------------------------------------------------------
 sudo chown u1:u1 /home/test13
