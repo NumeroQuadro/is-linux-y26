@@ -62,7 +62,6 @@ exit
 13. sudo -i
 mkdir -p /root/localrepo
 cd /root/localrepo
-(after a lot of googling and stuff i realised that all dependencies somehow installed in single folder and i used -O option to create multiple folders)
 - wget https://snapshot.debian.org/archive/debian/20250209T210016Z/pool/main/h/htop/htop_3.3.0-5_amd64.deb
 - wget https://snapshot.debian.org/archive/debian/20240129T091021Z/pool/main/h/htop/htop_3.3.0-4_amd64.deb
 - wget https://snapshot.debian.org/archive/debian/20230227T025930Z/pool/main/h/htop/htop_3.2.2-2_amd64.deb
@@ -72,19 +71,15 @@ cd /root/localrepo
 dpkg-scanpackages --multiversion . /dev/null | gzip -9 > Packages.gz
 nano Release
 ```
-Origin: My Local Repo
 Label: My Local Repo
 Suite: stable
-Version: 1
+Version: 1.0
 Codename: myrepo
 Architectures: amd64
 Components: main
 Description: My local APT repository
-Date: $(date -Ru)
-MD5Sum:
- SHA256:
 ```
-15. echo "deb [trusted=yes] file:/var/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
+15. echo "deb [trusted=yes] file:/root/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
 sudo apt update
 ```
 root@vbox:/var/localrepo# echo "deb [trusted=yes] file:/var/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
@@ -139,21 +134,29 @@ All packages are up to date.
 
 ```
 16. apt-cache policy > repositories.log
-apt-ftparchive release . > Release
-17. apt-cache madison htop > task16.log (madison better than policy, because it allows to show all versions of a package)
-
 ```
-root@vbox:/var/localrepo# apt-cache madison htop
-      htop |    3.2.2-2 | http://deb.debian.org/debian bookworm/main amd64 Packages
-      htop |    3.2.2-2 | http://deb.debian.org/debian bookworm/main Sources
+Package files:
+ 100 /var/lib/dpkg/status
+     release a=now
+ 500 file:/var/localrepo ./ Packages
+     release v=1.0,o=My Local Repo,a=stable,n=myrepo,l=My Local Repo,c=
+ 500 http://deb.debian.org/debian bookworm-updates/non-free-firmware amd64 Packages
+     release v=12-updates,o=Debian,a=stable-updates,n=bookworm-updates,l=Debian,c=non-free-firmware,b=amd64
+     origin deb.debian.org
+ 500 http://deb.debian.org/debian bookworm-updates/main amd64 Packages
+     release v=12-updates,o=Debian,a=stable-updates,n=bookworm-updates,l=Debian,c=main,b=amd64
+     origin deb.debian.org
+```
+17. apt-cache madison htop > task16.log (madison better than policy, because it allows to show all versions of a package)
+```
 root@vbox:/var/localrepo# cat task16.log
       htop |    3.3.0-5 | file:/var/localrepo ./ Packages
       htop |    3.3.0-4 | file:/var/localrepo ./ Packages
       htop |    3.2.2-2 | http://deb.debian.org/debian bookworm/main amd64 Packages
       htop |    3.2.2-2 | file:/var/localrepo ./ Packages
       htop |    3.0.5-5 | file:/var/localrepo ./ Packages
+      htop | 2.2.0-1+b1 | file:/var/localrepo ./ Packages
       htop |    2.1.0-3 | file:/var/localrepo ./ Packages
-      htop |      0.9-4 | file:/var/localrepo ./ Packages
       htop |    3.2.2-2 | http://deb.debian.org/debian bookworm/main Sources
 ```
 
@@ -164,3 +167,52 @@ sudo mv /root/localrepo/* /var/localrepo/
 sudo rmdir /root/localrepo
 echo "deb [trusted=yes] file:/var/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list # register my NEW (recently moved) local repository )
 
+18. sudo apt install htop=3.0.5-5
+```
+root@vbox:/var/localrepo# sudo apt install htop=3.0.5-5
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  libncursesw5 libtinfo5 linux-image-6.1.0-29-amd64
+Use 'sudo apt autoremove' to remove them.
+Suggested packages:
+  lm-sensors strace
+The following packages will be upgraded:
+  htop
+1 upgraded, 0 newly installed, 0 to remove and 24 not upgraded.
+Need to get 0 B/127 kB of archives.
+After this operation, 98.3 kB of additional disk space will be used.
+Get:1 file:/var/localrepo ./ htop 3.0.5-5 [127 kB]
+Reading changelogs... Done
+(Reading database ... 191253 files and directories currently installed.)
+Preparing to unpack ..././htop_3.0.5-5_amd64.deb ...
+Unpacking htop (3.0.5-5) over (2.1.0-3) ...
+Setting up htop (3.0.5-5) ...
+Processing triggers for mailcap (3.70+nmu1) ...
+Processing triggers for desktop-file-utils (0.26-1) ...
+Processing triggers for hicolor-icon-theme (0.17-2) ...
+Processing triggers for gnome-menus (3.36.0-1.1) ...
+Processing triggers for man-db (2.11.2-2) ...
+root@vbox:/var/localrepo# 
+```
+19. mkdir nano_task
+cd nano_task
+
+sudo apt-get update
+sudo apt-get install build-essential devscripts dpkg-dev
+
+apt-get download nano
+
+mkdir nano_extract
+dpkg-deb -R nano_*.deb nano_extract (extracting packet)
+
+cd nano_extract/bin
+ln -s nano newnano
+cd ../..
+
+dpkg-deb -b nano_extract nano_modified.deb
+
+sudo dpkg -i nano_modified.deb
+
+newnano
