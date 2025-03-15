@@ -2,7 +2,7 @@
 2. sudo apt update
 3. apt show build-essential or for old versions apt-cache show build-essential
 4. sudo apt install build-essential
-```
+```bash
 The following additional packages will be installed:
   binutils binutils-common binutils-x86-64-linux-gnu dpkg-dev fakeroot g++ g++-12 gcc
   gcc-12 libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
@@ -29,7 +29,7 @@ The following NEW packages will be installed:
 bastet - ncurses Tetris clone with a bastard algorithm
 6. `mkdir -p ~/src_package` ; `cd ~/src_package`
 apt-get source bastet
-```
+```bash
 dimonlimon@vbox:~/src_package$ ls
 bastet-0.43  bastet_0.43-7.debian.tar.xz  bastet_0.43-7.dsc  bastet_0.43.orig.tar.gz
 ```
@@ -40,7 +40,7 @@ make
 7. apt-get source bastet
 8. nano Makefile
 in Makefile:
-```
+```bash
 install:
         install -m 755 bastet /usr/local/bin
 ```
@@ -48,7 +48,7 @@ sudo make all
 sudo make install
 ls -l /usr/local/bin/bastet
 output: 
-```
+```bash
 -rwxr-xr-x 1 root root 693120 Feb 28 18:33 /usr/local/bin/bastet
 ```
 now program `bastet` can be executed by simply entring `bastet` in terminal
@@ -70,7 +70,7 @@ cd /root/localrepo
 14. sudo apt-get install dpkg-dev
 dpkg-scanpackages --multiversion . /dev/null | gzip -9 > Packages.gz
 nano Release
-```
+```bash
 Label: My Local Repo
 Suite: stable
 Version: 1.0
@@ -81,7 +81,7 @@ Description: My local APT repository
 ```
 15. echo "deb [trusted=yes] file:/root/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
 sudo apt update
-```
+```bash
 root@vbox:/var/localrepo# echo "deb [trusted=yes] file:/var/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
 deb [trusted=yes] file:/var/localrepo ./
 root@vbox:/var/localrepo# sudo apt update
@@ -131,10 +131,9 @@ Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 All packages are up to date.
-
 ```
 16. apt-cache policy > repositories.log
-```
+```bash
 Package files:
  100 /var/lib/dpkg/status
      release a=now
@@ -148,7 +147,7 @@ Package files:
      origin deb.debian.org
 ```
 17. apt-cache madison htop > task16.log (madison better than policy, because it allows to show all versions of a package)
-```
+```bash
 root@vbox:/var/localrepo# cat task16.log
       htop |    3.3.0-5 | file:/var/localrepo ./ Packages
       htop |    3.3.0-4 | file:/var/localrepo ./ Packages
@@ -168,7 +167,7 @@ sudo rmdir /root/localrepo
 echo "deb [trusted=yes] file:/var/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list # register my NEW (recently moved) local repository )
 
 18. sudo apt install htop=3.0.5-5
-```
+```bash
 root@vbox:/var/localrepo# sudo apt install htop=3.0.5-5
 Reading package lists... Done
 Building dependency tree... Done
