@@ -52,16 +52,19 @@ output:
 -rwxr-xr-x 1 root root 693120 Feb 28 18:33 /usr/local/bin/bastet
 ```
 now program `bastet` can be executed by simply entring `bastet` in terminal
+
 9. sudo adduser testuser
 su - testuser
 bastet (works fine)
 exit
+
 10. dpkg --get-selections > task10.log # cat task10.log | less
 11. apt-cache depends gcc > task11.log # cat task11.log
 12. apt-cache rdepends libgpm2 > task12.log
 13. sudo -i
 mkdir -p /root/localrepo
 cd /root/localrepo
+
 - wget https://snapshot.debian.org/archive/debian/20250209T210016Z/pool/main/h/htop/htop_3.3.0-5_amd64.deb
 - wget https://snapshot.debian.org/archive/debian/20240129T091021Z/pool/main/h/htop/htop_3.3.0-4_amd64.deb
 - wget https://snapshot.debian.org/archive/debian/20230227T025930Z/pool/main/h/htop/htop_3.2.2-2_amd64.deb
@@ -79,6 +82,7 @@ Architectures: amd64
 Components: main
 Description: My local APT repository
 ```
+
 15. echo "deb [trusted=yes] file:/root/localrepo ./" | sudo tee /etc/apt/sources.list.d/localrepo.list
 sudo apt update
 ```bash
@@ -132,6 +136,7 @@ Building dependency tree... Done
 Reading state information... Done
 All packages are up to date.
 ```
+
 16. apt-cache policy > repositories.log
 ```bash
 Package files:
@@ -146,6 +151,7 @@ Package files:
      release v=12-updates,o=Debian,a=stable-updates,n=bookworm-updates,l=Debian,c=main,b=amd64
      origin deb.debian.org
 ```
+
 17. apt-cache madison htop > task16.log (madison better than policy, because it allows to show all versions of a package)
 ```bash
 root@vbox:/var/localrepo# cat task16.log
@@ -195,6 +201,7 @@ Processing triggers for gnome-menus (3.36.0-1.1) ...
 Processing triggers for man-db (2.11.2-2) ...
 root@vbox:/var/localrepo# 
 ```
+
 19. mkdir nano_task
 cd nano_task
 
